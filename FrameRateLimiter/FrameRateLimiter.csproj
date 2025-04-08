@@ -60,7 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FpsLimiterMod.cs" />
+    <Compile Include="FrameRateLimiterMod.cs" />
     <Compile Include="FrameRateLimiter.cs" />
     <Compile Include="Patcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

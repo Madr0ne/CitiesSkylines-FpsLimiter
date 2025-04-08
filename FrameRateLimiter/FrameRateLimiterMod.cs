@@ -6,20 +6,15 @@ using UnityEngine;
 
 namespace FrameRateLimiter
 {
-    public class FpsLimiterMod : IUserMod
+    public class FrameRateLimiterMod : IUserMod
     {
         public const String settingsFileName = "FrameRateLimiter";
         public const string version = "1.0.0";
-        public string Name
-        {
-            get { return "Frame rate Limiter " + version; }
-        }
-        public string Description
-        {
-            get { return "This mod adds adds to ability to select a maximum frame rate in the existing display settings."; }
-        }
+        public string Name => $"Frame rate Limiter {version}";
+        public string Description => "This mod adds the ability to select a maximum frame rate in the existing display settings.";
 
-        public FpsLimiterMod() {
+        public FrameRateLimiterMod()
+        {
             try
             {
                 // Creating setting file
@@ -27,11 +22,11 @@ namespace FrameRateLimiter
             }
             catch (Exception e)
             {
-                Debug.Log("Couldn't load/create the setting file.");
+                Debug.LogError($"Failed to load or create the settings file '{settingsFileName}'. Exception: {e.Message}");
                 Debug.LogException(e);
+                Debug.Log(typeof(Patcher).GetMethod("UpdateVSyncPostfix"));
             }
         }
-
 
         [UsedImplicitly]
         public void OnEnabled() => FrameRateLimiter.StartMod();

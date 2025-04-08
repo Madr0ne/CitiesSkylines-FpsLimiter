@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
-using ColossalFramework;
+﻿using System.Collections;
+using CitiesHarmony.API;
 using ColossalFramework.UI;
-using FpsLimiter;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -15,6 +13,7 @@ namespace FrameRateLimiter
 
         internal static void StartMod()
         {
+            HarmonyHelper.EnsureHarmonyInstalled();
             var go = new GameObject(nameof(FrameRateLimiter), typeof(FrameRateLimiter));
             DontDestroyOnLoad(go);
         }
@@ -22,6 +21,7 @@ namespace FrameRateLimiter
         internal static void EndMod()
         {
             Destroy(Instance);
+            if (HarmonyHelper.IsHarmonyInstalled) Patcher.UnpatchAll();
         }
 
         [UsedImplicitly]
@@ -29,22 +29,22 @@ namespace FrameRateLimiter
         {
             Instance = this;
         }
+
         [UsedImplicitly]
         IEnumerator Start()
         {
             yield return new WaitUntil(() => GameObject.Find("DisplaySettings") != null);
             UIPanel DisplaySettings = GameObject.Find("DisplaySettings").GetComponent<UIPanel>();
+
             Panel = DisplaySettings.AddUIComponent<UISettingsLimitPanel>();
+            if (HarmonyHelper.IsHarmonyInstalled) Patcher.PatchAll(); // Harmony patch relies on objecs created by our custom pane
         }
 
         [UsedImplicitly]
         void OnDestroy()
         {
-            Application.targetFrameRate = -1;
             Destroy(Panel.gameObject);
             Instance = null;
-            Panel = null;
-            //Patcher.UnpatchAll();
         }
     }
 }
